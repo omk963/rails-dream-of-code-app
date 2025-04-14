@@ -1,0 +1,64 @@
+<!-- Question 1 -->
+
+Finish Task 2 from the lesson.
+
+For each CodingClass, create a new Course record for that class in the Spring 2026 trimester. Here are some tips:
+
+    courses = CodingClass.all
+
+    spring2026 = Trimester.find_by(term: 'Spring', year: '2026')
+
+    courses.each do |course|
+        puts spring2026.id, course.id
+    end
+
+<!-- Question 2 -->
+Create a new student record and enroll the student in the Intro to Programming course for the Spring 2026 trimester.
+Find a mentor with no more than 2 students (enrollments) assigned and assign that mentor to your new student's enrollment.
+
+    intro = CodingClass.find_by(title: 'Intro to Programming')
+    course_to_enroll = Course.find_by(trimester_id: spring2026.id, coding_class_id: intro.id)
+    
+    new_student = Student.create(first_name: 'New', last_name: 'Student', email: 'new.student@test.com')
+    enrollment = Enrollment.create(course_id: course_to_enroll.id, student_id: new_student.id)
+
+    all_mentors.each do |mentor|
+        enrollments = MentorEnrollmentAssignment.where(mentor_id: mentor.id)
+        if enrollments.count < 3
+            MentorEnrollmentAssignment.create(mentor_id: mentor.id, enrollment_id: enrollment.id)
+        end
+    end
+
+<!-- Question 3 - Describe your project -->
+Let's begin designing the data model for your project! We'll need to start with a high level description of the application and what a user should be able to do in the app.
+
+Write a description of your project idea. Try to answer the questions below in your description if they are applicable.
+    A tool for expecting parents to monitor the progress of pregnancy, track health metrics, and prepare for the arrival of their baby as well as the first few years of development.
+Who are the users of your application? Do you have different types of users or different roles?
+    general users (expecting/current parents) and admin
+What are the core user scenarios or features of your app? These could be statements like...
+    A user can create entries to document information regarding their pregnancy and milestones
+    A user can edit their entries
+    A user can delete their entries
+    A user can view milestones
+Or if it makes more sense for your idea, you might describe some process or flow...for example:
+"First, a meeting organizer creates a poll. Then they add meeting attendees, and the attendees vote on a time. Then after each has voted, the poll closes and a meeting is created."
+Consider sketching some wireframes for the main or more complex screens of your app. When you do this, think of what data you'll need to display on each page.
+
+<!-- Question 4 - Design the data model for your project -->
+Start by just listing out what you think the "nouns" or tables (or models) will be in your application. What are the things you talk about when you describe the application?
+Now think about the data each of these things will hold. Some of these may be attributes or columns, but be on the lookout for data that may be associations with other "nouns".
+Create an ERD to visualize your tables and data.
+    user: id, first_name, last_name, email, password, role, created_at, updated_at
+    pregnancies: id, user_id, start_date, expected_due_date, created_at, updated_at
+    weekly_entries: id, pregnancy_id, week_number, weight, blood_pressure, mood, notes, created_at, updated_at
+    appointments: id, pregnancy_id, appointment_date, location, notes, provider_name, created_at, updated_at
+    journal_entries: id, pregnancy_id, title, content, entry_date, created_at, updated_at
+    medications: id, name, strength, purpose, sig, safe (to take during pregnancy/lactation), created_at, updated_at
+    medication_log: id, pregnancy_id, medication_id, taken_at, notes, created_at, updated_at
+    milestones: id, week_number, description, created_at, updated_at
+
+    user has_many pregnancies
+    pregnancies has_many weekly_entries, appointments, medication_log, milestones
+    weekly_entries has_many journal_entries
+    medications has_many medication_log
