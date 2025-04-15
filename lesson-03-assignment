@@ -1,0 +1,54 @@
+At Dream of Code, some courses may have topics in common with other courses. All the backend courses, for example, have lessons on data modeling and on the web request cycle. And the Introduction to Programming and React courses both have some lessons on CSS. Dream of Code would like to add tags to course lessons so that a student can easily search for all DoC lessons on a certain topic, regardless of what course the lessons come from. Of course, a topic will have many lessons, and there will certainly be lessons that span many topics. So the relationship between topics and lessons will be "many-to-many", which means we'll need a join table, in addition to a new topics table.
+
+<!-- 1. What tables do you need to add? Decide on table names and their associations to each other and any existing tables/models. -->
+    bin/rails generate migration create_topics
+
+        class CreateTopics < ActiveRecord::Migration[8.0]
+            def change
+                create_table :topics do |t|
+                    t.string :title
+
+                    t.timestamps
+                end
+            end
+        end
+
+    bin/rails generate model Topic
+        // topics.rb
+        class Topic < ApplicationRecord
+            has_many :lesson_topics
+        end
+
+    bin/rails generate migration create_lesson_topics 
+
+        class CreateLessonTopics < ActiveRecord::Migration[7.0]
+            def change
+                create_table :lesson_topics do |t|
+                    t.references :lesson
+                    t.references :topic
+
+                    t.timestamps
+                end
+            end
+        end
+
+    bin/rails generate model LessonTopic
+
+        class LessonTopic < ApplicationRecord
+            belongs_to :lesson
+            belongs_to :topic
+        end
+
+<!-- 2. What columns are necessary for the associations you decided on? -->
+    topics has_many :lesson
+    lesson has_many :topics
+
+<!-- 3. What other columns (if any) need to be included on the tables? What other data needs to be stored? -->
+    topics: id-string, title-string, timestamps-datetime
+    lesson_topics: id-string, topic_id-references, lesson_id-references, timestamps-datetime
+
+<!-- 4. Write out each table's name and column names with data types. -->
+    See Question 3.
+
+<!-- 5. Determine the generator command you'll need to create the migration file and run the command to generate the empty migration file. Start with just the topics migration. (Hint: your filename should be create_topics) -->
+    See Question 1.
