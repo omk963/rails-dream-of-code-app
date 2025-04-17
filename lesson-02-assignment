@@ -4,12 +4,12 @@ Finish Task 2 from the lesson.
 
 For each CodingClass, create a new Course record for that class in the Spring 2026 trimester. Here are some tips:
 
-    courses = CodingClass.all
+    coding_classes = CodingClass.all
 
     spring2026 = Trimester.find_by(term: 'Spring', year: '2026')
 
     courses.each do |course|
-        Course.create(coding_class_id: course.id, trimester_id: spring2026.id)
+        Course.create(coding_class_id: coding_classes.id, trimester_id: spring2026.id)
     end
 
 <!-- Question 2 -->
